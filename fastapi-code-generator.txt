@@ -1,0 +1,1 @@
+docker run --rm -v C:\python_projects\lakefs-wrapper-3:/local python:3.11-slim /bin/bash -c "pip install 'click<8.1.0' 'pydantic<2.0' 'black==22.3.0' fastapi-code-generator==0.4.4 && fastapi-codegen --input /local/swagger.yml --output /local/lakefs_api"
