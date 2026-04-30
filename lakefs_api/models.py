@@ -8,7 +8,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, conint, constr
+from pydantic import BaseModel, Field, RootModel, conint, constr
 
 
 class Pagination(BaseModel):
@@ -40,8 +40,8 @@ class Repository(BaseModel):
     )
 
 
-class RepositoryMetadata(BaseModel):
-    __root__: Optional[Dict[str, str]] = None
+class RepositoryMetadata(RootModel[Optional[Dict[str, str]]]):
+    pass
 
 
 class RepositoryMetadataSet(BaseModel):
@@ -70,13 +70,13 @@ class MergeResult(BaseModel):
 
 
 class RepositoryCreation(BaseModel):
-    name: constr(regex=r'^[a-z0-9][a-z0-9-]{2,62}$')
+    name: constr(pattern=r'^[a-z0-9][a-z0-9-]{2,62}$')
     storage_id: Optional[str] = Field(
         None,
         description='Unique identifier of the underlying data store. *EXPERIMENTAL*',
     )
     storage_namespace: constr(
-        regex=r'^(s3|gs|https?|mem|local|transient)://.*$'
+        pattern=r'^(s3|gs|https?|mem|local|transient)://.*$'
     ) = Field(
         ...,
         description='Filesystem URI to store the underlying data in (e.g. "s3://my-bucket/some/path/")',
@@ -110,8 +110,8 @@ class ObjectCopyCreation(BaseModel):
     )
 
 
-class ObjectUserMetadata(BaseModel):
-    __root__: Optional[Dict[str, str]] = None
+class ObjectUserMetadata(RootModel[Optional[Dict[str, str]]]):
+    pass
 
 
 class UnderlyingObjectProperties(BaseModel):
@@ -353,8 +353,9 @@ class LoginUrlMethod(Enum):
 
 
 class LoginConfig(BaseModel):
-    RBAC: Optional[RBAC] = Field(
+    rbac: Optional[RBAC] = Field(
         None,
+        alias='RBAC',
         description='RBAC will remain enabled on GUI if "external".  That only works\nwith an external auth service.\n',
     )
     username_ui_placeholder: Optional[str] = Field(
@@ -510,8 +511,8 @@ class GroupCreation(BaseModel):
     description: Optional[str] = None
 
 
-class PolicyCondition(BaseModel):
-    __root__: Optional[Dict[str, List[str]]] = None
+class PolicyCondition(RootModel[Optional[Dict[str, List[str]]]]):
+    pass
 
 
 class Effect(Enum):
@@ -522,7 +523,7 @@ class Effect(Enum):
 class Statement(BaseModel):
     effect: Effect
     resource: str
-    action: List[str] = Field(..., min_items=1)
+    action: List[str] = Field(..., min_length=1)
     condition: Optional[Dict[str, PolicyCondition]] = Field(
         None, description='Optional conditions for when this statement applies.'
     )
@@ -531,7 +532,7 @@ class Statement(BaseModel):
 class Policy(BaseModel):
     id: str
     creation_date: Optional[int] = Field(None, description='Unix Epoch in seconds')
-    statement: List[Statement] = Field(..., min_items=1)
+    statement: List[Statement] = Field(..., min_length=1)
 
 
 class PolicyList(BaseModel):
@@ -560,8 +561,8 @@ class StorageConfig(BaseModel):
     blockstore_description: Optional[str] = None
 
 
-class StorageConfigList(BaseModel):
-    __root__: List[StorageConfig]
+class StorageConfigList(RootModel[List[StorageConfig]]):
+    pass
 
 
 class VersionConfig(BaseModel):
@@ -787,7 +788,7 @@ class TaskCreation(BaseModel):
 
 
 class MetaRangeCreation(BaseModel):
-    ranges: List[RangeMetadata] = Field(..., min_items=1)
+    ranges: List[RangeMetadata] = Field(..., min_length=1)
 
 
 class MetaRangeCreationResponse(BaseModel):
@@ -837,7 +838,7 @@ class CopyPartSource(BaseModel):
     repository: str
     ref: str
     path: str
-    range: Optional[constr(regex=r'^bytes=((\d*-\d*,? ?)+)$')] = Field(
+    range: Optional[constr(pattern=r'^bytes=((\d*-\d*,? ?)+)$')] = Field(
         None, description='Range of bytes to copy'
     )
 
@@ -875,8 +876,8 @@ class InstallationUsageReport(BaseModel):
     reports: List[UsageReport]
 
 
-class ExternalPrincipalSettings(BaseModel):
-    __root__: Optional[Dict[str, str]] = None
+class ExternalPrincipalSettings(RootModel[Optional[Dict[str, str]]]):
+    pass
 
 
 class Settings(BaseModel):

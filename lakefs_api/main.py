@@ -7,7 +7,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional, Union
 
-from fastapi import FastAPI, Header, Path, Query, Request, UploadFile
+from fastapi import FastAPI, Header, HTTPException, Path, Query, Request
+from fastapi.routing import APIRoute
 from pydantic import conint, constr
 
 from .models import (
@@ -120,6 +121,18 @@ app = FastAPI(
     version='1.0.0',
     servers=[{'url': '/api/v1', 'description': 'lakeFS server endpoint'}],
 )
+
+
+class NotImplementedRoute(APIRoute):
+    def get_route_handler(self):
+        async def route_handler(_: Request):
+            raise HTTPException(status_code=501, detail='Not implemented')
+
+        return route_handler
+
+
+app.router.route_class = NotImplementedRoute
+app.router.prefix = '/api/v1'
 
 
 @app.get(
@@ -1453,7 +1466,7 @@ def upload_object(
     repository: str = ...,
     branch: str = ...,
     path: str = ...,
-    file: UploadFile = ...,
+    file: bytes = b'',
 ) -> Union[None, ObjectStats, Error]:
     pass
 
@@ -2354,7 +2367,7 @@ def log_commits(
     tags=['objects'],
 )
 def get_object(
-    range: Optional[constr(regex=r'^bytes=((\d*-\d*,? ?)+)$')] = Header(
+    range: Optional[constr(pattern=r'^bytes=((\d*-\d*,? ?)+)$')] = Header(
         None, alias='Range'
     ),
     if__none__match: Optional[str] = Header(None, alias='If-None-Match'),
@@ -2375,7 +2388,7 @@ def get_object(
     tags=['objects'],
 )
 def head_object(
-    range: Optional[constr(regex=r'^bytes=((\d*-\d*,? ?)+)$')] = Header(
+    range: Optional[constr(pattern=r'^bytes=((\d*-\d*,? ?)+)$')] = Header(
         None, alias='Range'
     ),
     repository: str = ...,
