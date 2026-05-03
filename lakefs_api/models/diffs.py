@@ -11,6 +11,28 @@ from .commits import Commit, CommitCreation
 from .objects import ObjectUserMetadata
 
 
+class DiffComparisonType(Enum):
+    """Diff comparison type (two_dot vs three_dot). Codegen produces Type3 and Type4."""
+    two_dot = 'two_dot'
+    three_dot = 'three_dot'
+
+
+# Aliases matching the generated names
+Type3 = DiffComparisonType
+Type4 = DiffComparisonType
+
+
+class RangeType(Enum):
+    """Range metadata type. Codegen produces Type5 and Type6."""
+    range = 'range'
+    meta_range = 'meta_range'
+
+
+# Aliases matching the generated names
+Type5 = RangeType
+Type6 = RangeType
+
+
 class DiffType(Enum):
     added = 'added'
     removed = 'removed'

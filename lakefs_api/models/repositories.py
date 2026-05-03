@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, Field, constr
 
 from .base import Pagination
+from .commits import RefsDump
 
 
 class Repository(BaseModel):
@@ -66,7 +67,7 @@ class RepositoryDumpStatus(BaseModel):
     done: bool
     update_time: str  # datetime
     error: Optional[str] = None
-    refs: Optional['RefsDump'] = None
+    refs: Optional[RefsDump] = None
 
 
 class RepositoryRestoreStatus(BaseModel):
@@ -74,3 +75,13 @@ class RepositoryRestoreStatus(BaseModel):
     done: bool
     update_time: str  # datetime
     error: Optional[str] = None
+
+
+class RepositoriesRepositoryBranchesBranchObjectsPostRequest(BaseModel):
+    content: Optional[bytes] = Field(
+        None, description='Only a single file per upload which must be named "content".'
+    )
+
+
+class RepositoriesRepositoryBranchProtectionDeleteRequest(BaseModel):
+    pattern: str

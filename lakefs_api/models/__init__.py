@@ -15,6 +15,8 @@ from .repositories import (
     RepositoryMetadataKeys,
     RepositoryMetadataSet,
     RepositoryRestoreStatus,
+    RepositoriesRepositoryBranchesBranchObjectsPostRequest,
+    RepositoriesRepositoryBranchProtectionDeleteRequest,
 )
 from .commits import (
     BranchCreation,
@@ -68,6 +70,12 @@ from .diffs import (
     DiffObjectStat,
     DiffPathType,
     DiffType,
+    DiffComparisonType,
+    Type3,
+    Type4,
+    RangeType,
+    Type5,
+    Type6,
     GarbageCollectionConfig,
     GarbageCollectionPrepareResponse,
     GarbageCollectionRule,
@@ -131,6 +139,9 @@ from .pull_requests import (
     PullRequestCreation,
     PullRequestCreationResponse,
     PullRequestStatus,
+    PullRequestStatusFilter,
+    Status3,
+    Status4,
     PullRequestsList,
 )
 from .config import (
@@ -156,6 +167,10 @@ __all__ = [
     'Repository', 'RepositoryCreation', 'RepositoryDumpStatus', 'RepositoryList',
     'RepositoryMetadata', 'RepositoryMetadataKeys', 'RepositoryMetadataSet',
     'RepositoryRestoreStatus',
+    'RepositoriesRepositoryBranchesBranchObjectsPostRequest',
+    'RepositoriesRepositoryBranchProtectionDeleteRequest',
+    'RepositoriesRepositoryBranchesBranchObjectsPostRequest',
+    'RepositoriesRepositoryBranchProtectionDeleteRequest',
     # commits
     'BranchCreation', 'CherryPickCreation', 'Commit', 'CommitCreation', 'CommitList',
     'CommitOverrides', 'CommitRecordCreation', 'FindMergeBaseResult', 'Merge',
@@ -170,7 +185,9 @@ __all__ = [
     'UploadPartFrom', 'UploadTo',
     # diffs / gc / actions
     'ActionRun', 'ActionRunList', 'ActionRunStatus', 'BranchProtectionRule', 'Diff',
-    'DiffList', 'DiffObjectStat', 'DiffPathType', 'DiffType', 'GarbageCollectionConfig',
+    'DiffList', 'DiffObjectStat', 'DiffPathType', 'DiffType',
+    'DiffComparisonType', 'Type3', 'Type4', 'RangeType', 'Type5', 'Type6',
+    'GarbageCollectionConfig',
     'GarbageCollectionPrepareResponse', 'GarbageCollectionRule', 'GarbageCollectionRules',
     'HookRun', 'HookRunList', 'ImportCreation', 'ImportCreationResponse', 'ImportLocation',
     'ImportLocationType', 'ImportStatus', 'MetaRangeCreation', 'MetaRangeCreationResponse',
@@ -187,7 +204,7 @@ __all__ = [
     'UserCreation', 'UserList',
     # pull requests
     'PullRequest', 'PullRequestBasic', 'PullRequestCreation', 'PullRequestCreationResponse',
-    'PullRequestStatus', 'PullRequestsList',
+    'PullRequestStatus', 'PullRequestStatusFilter', 'Status3', 'Status4', 'PullRequestsList',
     # config / stats
     'CapabilitiesConfig', 'Config', 'CustomViewer', 'InstallationUsageReport', 'StatsEvent',
     'StatsEventsList', 'StorageConfig', 'StorageConfigList', 'UIConfig', 'UsageReport',

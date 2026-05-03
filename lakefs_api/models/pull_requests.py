@@ -10,6 +10,18 @@ from .base import Pagination
 from typing import List
 
 
+class PullRequestStatusFilter(Enum):
+    """Filter enum for listing PRs. Codegen produces Status3 and Status4."""
+    open = 'open'
+    closed = 'closed'
+    all = 'all'
+
+
+# Aliases matching the generated names
+Status3 = PullRequestStatusFilter
+Status4 = PullRequestStatusFilter
+
+
 class PullRequestStatus(Enum):
     open = 'open'
     closed = 'closed'
