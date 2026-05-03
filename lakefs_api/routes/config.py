@@ -1,8 +1,6 @@
-from fastapi import APIRouter
+from _shared import *
 
 app = APIRouter()
-
-
 
 
 @app.get(

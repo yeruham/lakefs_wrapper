@@ -22,7 +22,7 @@ def diff_refs(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     prefix: Optional[str] = None,
     delimiter: Optional[str] = None,
-    type: Optional[Type4] = 'three_dot',
+    type: Optional[Type4] = ...,
     include_right_stats: Optional[bool] = False,
 ) -> Union[DiffList, Error]:
     """

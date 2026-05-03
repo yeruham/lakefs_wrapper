@@ -4,112 +4,14 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import List, Optional, Union
+from fastapi import FastAPI
 
-from fastapi import FastAPI, Header, HTTPException, Path, Query, Request
-from fastapi.routing import APIRoute
-from pydantic import conint, constr
+from .routes.auth.api import app as auth_router
+from .routes.repos.api import app as repos_router
+from .routes.setup import app as setup_router
+from .routes.config import app as config_router
+from .routes.gc import app as gc_router
 
-from .models import (
-    ACL,
-    AbortPresignMultipartUpload,
-    ActionRun,
-    ActionRunList,
-    AuthCapabilities,
-    AuthenticationToken,
-    BranchCreation,
-    BranchProtectionRule,
-    CherryPickCreation,
-    Commit,
-    CommitCreation,
-    CommitList,
-    CommitRecordCreation,
-    CommPrefsInput,
-    CompletePresignMultipartUpload,
-    Config,
-    Credentials,
-    CredentialsList,
-    CredentialsWithSecret,
-    CurrentUser,
-    DiffList,
-    Error,
-    ErrorNoACL,
-    ExternalLoginInformation,
-    ExternalPrincipal,
-    ExternalPrincipalCreation,
-    ExternalPrincipalList,
-    FindMergeBaseResult,
-    GarbageCollectionConfig,
-    GarbageCollectionPrepareResponse,
-    GarbageCollectionRules,
-    Group,
-    GroupCreation,
-    GroupList,
-    HookRunList,
-    ImportCreation,
-    ImportCreationResponse,
-    ImportStatus,
-    InstallationUsageReport,
-    LoginInformation,
-    Merge,
-    MergeResult,
-    ObjectCopyCreation,
-    ObjectErrorList,
-    ObjectStageCreation,
-    ObjectStats,
-    ObjectStatsList,
-    PathList,
-    Policy,
-    PolicyList,
-    PrepareGarbageCollectionCommitsStatus,
-    PrepareGCUncommittedRequest,
-    PrepareGCUncommittedResponse,
-    PresignMultipartUpload,
-    PullRequest,
-    PullRequestBasic,
-    PullRequestCreation,
-    PullRequestCreationResponse,
-    PullRequestsList,
-    Ref,
-    RefList,
-    RefsDump,
-    RefsRestore,
-    RepositoriesRepositoryBranchProtectionDeleteRequest,
-    Repository,
-    RepositoryCreation,
-    RepositoryDumpStatus,
-    RepositoryList,
-    RepositoryMetadata,
-    RepositoryMetadataKeys,
-    RepositoryMetadataSet,
-    RepositoryRestoreStatus,
-    ResetCreation,
-    RevertCreation,
-    Setup,
-    SetupState,
-    StagingLocation,
-    StagingMetadata,
-    StatsEventsList,
-    Status4,
-    StorageConfig,
-    StorageURI,
-    StsAuthRequest,
-    TagCreation,
-    TaskCreation,
-    TaskInfo,
-    Type4,
-    Type6,
-    UnderlyingObjectProperties,
-    UpdateObjectUserMetadata,
-    UploadPartCopyFrom,
-    UploadPartFrom,
-    UploadTo,
-    User,
-    UserCreation,
-    UserList,
-    VersionConfig,
-)
 
 app = FastAPI(
     description='lakeFS HTTP API',
@@ -124,6 +26,10 @@ app = FastAPI(
 
 app.router.prefix = '/api/v1'
 
+routers = [auth_router, repos_router, setup_router]
+
+for router in routers:
+    app.include_router(router)
 
 
 @app.get('/healthcheck', response_model=None, tags=['healthCheck'])
