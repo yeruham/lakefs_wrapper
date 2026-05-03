@@ -4,6 +4,27 @@ app = APIRouter()
 
 
 @app.post(
+    '/repositories/{repository}/commits',
+    response_model=None,
+    responses={
+        '400': {'model': Error},
+        '401': {'model': Error},
+        '403': {'model': Error},
+        '404': {'model': Error},
+        'default': {'model': Error},
+    },
+    tags=['internal'],
+)
+def create_commit_record(
+    repository: str, body: CommitRecordCreation = ...
+) -> Union[None, Error]:
+    """
+    create commit record
+    """
+    pass
+
+
+@app.post(
     '/repositories/{repository}/refs/{branch}/symlink',
     response_model=None,
     responses={

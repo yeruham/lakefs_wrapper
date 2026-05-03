@@ -1,4 +1,5 @@
 from .._shared import *
+from ...lakefs_client import _client
 
 app = APIRouter()
 
@@ -21,10 +22,7 @@ def list_branches(
     show_hidden: Optional[bool] = False,
     repository: str = ...,
 ) -> Union[RefList, Error]:
-    """
-    list branches
-    """
-    pass
+    return _client.branches_api.list_branches(repository=repository, prefix=prefix, after=after, amount=amount, show_hidden=show_hidden)
 
 
 @app.post(
@@ -44,10 +42,7 @@ def list_branches(
 def create_branch(
     repository: str, body: BranchCreation = ...
 ) -> Union[None, str, Error]:
-    """
-    create branch
-    """
-    pass
+    return _client.branches_api.create_branch(repository, body)
 
 
 @app.get(
@@ -62,10 +57,7 @@ def create_branch(
     tags=['branches'],
 )
 def get_branch(repository: str, branch: str = ...) -> Union[Ref, Error]:
-    """
-    get branch
-    """
-    pass
+    return _client.branches_api.get_branch(repository=repository, branch=branch)
 
 
 @app.delete(
@@ -83,10 +75,7 @@ def get_branch(repository: str, branch: str = ...) -> Union[Ref, Error]:
 def delete_branch(
     force: Optional[bool] = False, repository: str = ..., branch: str = ...
 ) -> Union[None, Error]:
-    """
-    delete branch
-    """
-    pass
+    return _client.branches_api.delete_branch(repository=repository, branch=branch, force=force)
 
 
 @app.put(
@@ -104,11 +93,7 @@ def delete_branch(
 def reset_branch(
     repository: str, branch: str = ..., body: ResetCreation = ...
 ) -> Union[None, Error]:
-    """
-    reset branch
-    """
-    pass
-
+    return _client.branches_api.reset_branch(repository=repository, branch=branch, reset_creation=body)
 
 
 @app.post(
@@ -127,7 +112,4 @@ def reset_branch(
 def revert_branch(
     repository: str, branch: str = ..., body: RevertCreation = ...
 ) -> Union[None, Error]:
-    """
-    revert
-    """
-    pass
+    return _client.branches_api.revert_branch(repository=repository, branch=branch, revert_creation=body)

@@ -1,4 +1,5 @@
 from .._shared import *
+from ...lakefs_client import _client
 
 app = APIRouter()
 
@@ -20,10 +21,7 @@ def list_tags(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     repository: str = ...,
 ) -> Union[RefList, Error]:
-    """
-    list tags
-    """
-    pass
+    return _client.tags_api.list_tags(repository=repository, prefix=prefix, after=after, amount=amount)
 
 
 @app.post(
@@ -41,10 +39,7 @@ def list_tags(
     tags=['tags'],
 )
 def create_tag(repository: str, body: TagCreation = ...) -> Union[None, Ref, Error]:
-    """
-    create tag
-    """
-    pass
+    return _client.tags_api.create_tag(repository=repository, tag_creation=body)
 
 
 @app.get(
@@ -59,10 +54,7 @@ def create_tag(repository: str, body: TagCreation = ...) -> Union[None, Ref, Err
     tags=['tags'],
 )
 def get_tag(repository: str, tag: str = ...) -> Union[Ref, Error]:
-    """
-    get tag
-    """
-    pass
+    return _client.tags_api.get_tag(repository=repository, tag=tag)
 
 
 @app.delete(
@@ -80,7 +72,4 @@ def get_tag(repository: str, tag: str = ...) -> Union[Ref, Error]:
 def delete_tag(
     force: Optional[bool] = None, repository: str = ..., tag: str = ...
 ) -> Union[None, Error]:
-    """
-    delete tag
-    """
-    pass
+    return _client.tags_api.delete_tag(repository=repository, force=force)

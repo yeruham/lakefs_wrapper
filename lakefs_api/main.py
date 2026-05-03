@@ -4,7 +4,9 @@
 
 from __future__ import annotations
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import Response, JSONResponse
+from lakefs_sdk.exceptions import ApiException
 
 from .routes.auth.api import app as auth_router
 from .routes.repos.api import app as repos_router
@@ -35,3 +37,19 @@ for router in routers:
 @app.get('/healthcheck', response_model=None, tags=['healthCheck'])
 def health_check() -> None:
     pass
+
+
+@app.exception_handler(ApiException)
+async def lakefs_error_handler(request: Request, exc: ApiException):
+    return Response(
+        content=exc.body,
+        status_code=exc.status,
+        media_type="application/json"
+    )
+
+@app.exception_handler(NotImplementedError)
+async def not_implemented_handler(request, exc):
+    return JSONResponse(
+        status_code=501,
+        content={"message": "This action is currently not supported by the wrapper."},
+    )

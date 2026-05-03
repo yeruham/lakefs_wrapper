@@ -1,4 +1,5 @@
 from .._shared import *
+from ...lakefs_client import _client
 
 app = APIRouter()
 
@@ -24,10 +25,7 @@ def commit(
     branch: str = ...,
     body: CommitCreation = ...,
 ) -> Union[None, Commit, Error]:
-    """
-    create commit
-    """
-    pass
+    return _client.commits_api.commit(repository=repository, branch=branch, source_metarange=source_metarange, commit_creation=body)
 
 @app.post(
     '/repositories/{repository}/branches/{branch}/cherry-pick',
@@ -46,10 +44,7 @@ def commit(
 def cherry_pick(
     repository: str, branch: str = ..., body: CherryPickCreation = ...
 ) -> Union[None, Commit, Error]:
-    """
-    Replay the changes from the given commit on the branch
-    """
-    pass
+    raise NotImplementedError
 
 
 
@@ -72,10 +67,7 @@ def diff_branch(
     repository: str = ...,
     branch: str = ...,
 ) -> Union[DiffList, Error]:
-    """
-    diff branch
-    """
-    pass
+    return _client.branches_api.diff_branch(repository=repository, branch=branch, prefix=prefix, amount=amount, after=after, delimiter=delimiter)
 
 
 @app.put(
@@ -93,32 +85,7 @@ def diff_branch(
 def hard_reset_branch(
     ref: str, force: Optional[bool] = False, repository: str = ..., branch: str = ...
 ) -> Union[None, Error]:
-    """
-    hard reset branch
-    """
-    pass
-
-
-@app.post(
-    '/repositories/{repository}/commits',
-    response_model=None,
-    responses={
-        '400': {'model': Error},
-        '401': {'model': Error},
-        '403': {'model': Error},
-        '404': {'model': Error},
-        'default': {'model': Error},
-    },
-    tags=['internal'],
-)
-def create_commit_record(
-    repository: str, body: CommitRecordCreation = ...
-) -> Union[None, Error]:
-    """
-    create commit record
-    """
-    pass
-
+    raise NotImplementedError
 
 
 @app.get(
@@ -135,7 +102,4 @@ def create_commit_record(
 def get_commit(
     repository: str, commit_id: str = Path(..., alias='commitId')
 ) -> Union[Commit, Error]:
-    """
-    get commit
-    """
-    pass
+    return _client.commits_api.get_commit(repository=repository, commit_id=commit_id)

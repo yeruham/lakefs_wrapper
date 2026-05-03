@@ -1,4 +1,5 @@
 from .._shared import *
+from ...lakefs_client import _client
 
 app = APIRouter()
 
@@ -19,10 +20,7 @@ def list_repositories(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     search: Optional[str] = None,
 ) -> Union[RepositoryList, Error]:
-    """
-    list repositories
-    """
-    pass
+    return _client.repositories_api.list_repositories(prefix=prefix, after=after, amount=amount, search=search)
 
 
 @app.post(
@@ -40,10 +38,7 @@ def list_repositories(
 def create_repository(
     bare: Optional[bool] = False, body: RepositoryCreation = ...
 ) -> Union[None, Repository, Error]:
-    """
-    create repository
-    """
-    pass
+    return _client.repositories_api.create_repository(repository_creation=body, bare=bare)
 
 
 @app.get(
@@ -58,10 +53,7 @@ def create_repository(
     tags=['repositories'],
 )
 def get_repository(repository: str) -> Union[Repository, Error]:
-    """
-    get repository
-    """
-    pass
+    return _client.repositories_api.get_repository(repository=repository)
 
 
 @app.delete(
@@ -78,10 +70,7 @@ def get_repository(repository: str) -> Union[Repository, Error]:
 def delete_repository(
     force: Optional[bool] = False, repository: str = ...
 ) -> Union[None, Error]:
-    """
-    delete repository
-    """
-    pass
+    raise NotImplementedError
 
 
 @app.get(
@@ -96,10 +85,7 @@ def delete_repository(
     tags=['repositories'],
 )
 def get_repository_metadata(repository: str) -> Union[RepositoryMetadata, Error]:
-    """
-    get repository metadata
-    """
-    pass
+    return _client.repositories_api.get_repository(repository=repository)
 
 
 @app.post(
@@ -116,10 +102,7 @@ def get_repository_metadata(repository: str) -> Union[RepositoryMetadata, Error]
 def set_repository_metadata(
     repository: str, body: RepositoryMetadataSet = ...
 ) -> Union[None, Error]:
-    """
-    set repository metadata
-    """
-    pass
+    raise NotImplementedError
 
 
 @app.delete(
@@ -135,7 +118,4 @@ def set_repository_metadata(
 def delete_repository_metadata(
     repository: str, body: RepositoryMetadataKeys = ...
 ) -> Union[None, Error]:
-    """
-    delete repository metadata
-    """
-    pass
+    raise NotImplementedError
