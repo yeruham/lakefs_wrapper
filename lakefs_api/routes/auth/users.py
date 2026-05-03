@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from .._shared import *
 
 app = APIRouter()
 
@@ -87,8 +87,6 @@ def delete_user(user_id: str = Path(..., alias='userId')) -> Union[None, Error]:
     pass
 
 
-
-
 @app.get(
     '/auth/users/{userId}/credentials',
     response_model=CredentialsList,
@@ -133,7 +131,6 @@ def create_credentials(
     pass
 
 
-
 @app.delete(
     '/auth/users/{userId}/credentials/{accessKeyId}',
     response_model=None,
@@ -153,7 +150,6 @@ def delete_credentials(
     delete credentials
     """
     pass
-
 
 
 @app.get(
