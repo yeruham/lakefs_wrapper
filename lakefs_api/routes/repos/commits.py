@@ -7,6 +7,7 @@ app = APIRouter()
 @app.post(
     '/repositories/{repository}/branches/{branch}/commits',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': Commit},
         '400': {'model': Error},
@@ -30,6 +31,7 @@ def commit(
 @app.post(
     '/repositories/{repository}/branches/{branch}/cherry-pick',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': Commit},
         '400': {'model': Error},

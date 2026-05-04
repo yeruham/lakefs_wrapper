@@ -67,6 +67,7 @@ def stat_object(
 @app.post(
     '/repositories/{repository}/branches/{branch}/objects',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': ObjectStats},
         '400': {'model': Error},
@@ -89,7 +90,7 @@ def upload_object(
     path: str = ...,
     file: bytes = b'',
 ) -> Union[None, ObjectStats, Error]:
-    pass
+    return _client.objects_api.upload_object(repository=repository, branch=branch, path=path, force=force, storage_class=storage_class, if_none_match=if__none__match, if_match=if__match, content=file)
 
 
 @app.delete(
@@ -114,12 +115,13 @@ def delete_object(
     """
     delete object. Missing objects will not return a NotFound error.
     """
-    pass
+    return _client.objects_api.delete_object(repository=repository, branch=branch, path=path, force=force, no_tombstone=no_tombstone)
 
 
 @app.post(
     '/repositories/{repository}/branches/{branch}/objects/copy',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': ObjectStats},
         '400': {'model': Error},
@@ -136,10 +138,7 @@ def copy_object(
     dest_path: str = ...,
     body: ObjectCopyCreation = ...,
 ) -> Union[None, ObjectStats, Error]:
-    """
-    create a copy of an object
-    """
-    pass
+    return _client.objects_api.copy_object(repository=repository, branch=branch, dest_path=dest_path, object_copy_creation=body)
 
 
 @app.post(
@@ -164,7 +163,7 @@ def delete_objects(
     """
     delete objects. Missing objects will not return a NotFound error.
     """
-    pass
+    return _client.objects_api.delete_objects(repository=repository, branch=branch, force=force, no_tombstone=no_tombstone, path_list=body)
 
 
 @app.get(
@@ -191,7 +190,4 @@ def get_object(
     ref: str = ...,
     path: str = ...,
 ) -> Union[bytes, Error]:
-    """
-    get object content
-    """
-    pass
+    return _client.objects_api.get_object(repository=repository, ref=ref, path=path, presign=presign, range=range, if_none_match=if__none__match)

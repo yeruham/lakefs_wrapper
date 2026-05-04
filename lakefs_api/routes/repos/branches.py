@@ -28,6 +28,7 @@ def list_branches(
 @app.post(
     '/repositories/{repository}/branches',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': str},
         '400': {'model': Error},

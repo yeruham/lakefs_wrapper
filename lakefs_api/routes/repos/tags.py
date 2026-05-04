@@ -27,6 +27,7 @@ def list_tags(
 @app.post(
     '/repositories/{repository}/tags',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': Ref},
         '400': {'model': Error},
