@@ -26,6 +26,7 @@ def list_repositories(
 @app.post(
     '/repositories',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': Repository},
         '400': {'model': Error},
@@ -38,7 +39,9 @@ def list_repositories(
 def create_repository(
     bare: Optional[bool] = False, body: RepositoryCreation = ...
 ) -> Union[None, Repository, Error]:
-    return _client.repositories_api.create_repository(repository_creation=body, bare=bare)
+    repo = _client.repositories_api.create_repository(repository_creation=body, bare=bare)
+    if repo:
+        return Repository.model_validate(repo.dict())
 
 
 @app.get(
