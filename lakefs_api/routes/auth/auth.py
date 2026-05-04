@@ -1,4 +1,5 @@
 from .._shared import *
+from ...services.auth import auth as auth_service
 
 app = APIRouter()
 
@@ -9,11 +10,11 @@ app = APIRouter()
     responses={'default': {'model': Error}},
     tags=['internal'],
 )
-def get_auth_capabilities() -> Union[AuthCapabilities, Error]:
+async def get_auth_capabilities() -> Union[AuthCapabilities, Error]:
     """
     list authentication capabilities supported
     """
-    pass
+    return await auth_service.get_auth_capabilities()
 
 
 @app.post(
@@ -26,11 +27,11 @@ def get_auth_capabilities() -> Union[AuthCapabilities, Error]:
     },
     tags=['auth'],
 )
-def login(body: LoginInformation = None) -> Union[AuthenticationToken, Error]:
+async def login(body: LoginInformation = None) -> Union[AuthenticationToken, Error]:
     """
     perform a login
     """
-    pass
+    return await auth_service.login(body)
 
 
 @app.get(
@@ -39,5 +40,5 @@ def login(body: LoginInformation = None) -> Union[AuthenticationToken, Error]:
     responses={'default': {'model': Error}},
     tags=['auth'],
 )
-def oauth_callback() -> Union[None, Error]:
-    pass
+async def oauth_callback() -> Union[None, Error]:
+    raise NotImplementedError

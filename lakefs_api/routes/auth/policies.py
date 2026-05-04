@@ -1,5 +1,7 @@
 from .._shared import *
 
+from ...services.auth import policies as policies_service
+
 app = APIRouter()
 
 
@@ -13,7 +15,7 @@ app = APIRouter()
     },
     tags=['auth'],
 )
-def list_policies(
+async def list_policies(
     prefix: Optional[str] = None,
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
@@ -21,12 +23,13 @@ def list_policies(
     """
     list policies
     """
-    pass
+    return await policies_service.list_policies(prefix=prefix, after=after, amount=amount)
 
 
 @app.post(
     '/auth/policies',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': Policy},
         '400': {'model': Error},
@@ -36,11 +39,11 @@ def list_policies(
     },
     tags=['auth'],
 )
-def create_policy(body: Policy) -> Union[None, Policy, Error]:
+async def create_policy(body: Policy) -> Union[None, Policy, Error]:
     """
     create policy
     """
-    pass
+    return await policies_service.create_policy(body=body)
 
 
 @app.get(
@@ -54,11 +57,11 @@ def create_policy(body: Policy) -> Union[None, Policy, Error]:
     },
     tags=['auth'],
 )
-def get_policy(policy_id: str = Path(..., alias='policyId')) -> Union[Policy, Error]:
+async def get_policy(policy_id: str = Path(..., alias='policyId')) -> Union[Policy, Error]:
     """
     get policy
     """
-    pass
+    return await policies_service.get_policy(policy_id=policy_id)
 
 
 @app.put(
@@ -72,13 +75,13 @@ def get_policy(policy_id: str = Path(..., alias='policyId')) -> Union[Policy, Er
     },
     tags=['auth'],
 )
-def update_policy(
+async def update_policy(
     policy_id: str = Path(..., alias='policyId'), body: Policy = ...
 ) -> Union[Policy, Error]:
     """
     update policy
     """
-    pass
+    return await policies_service.update_policy(policy_id=policy_id, body=body)
 
 
 @app.delete(
@@ -92,8 +95,8 @@ def update_policy(
     },
     tags=['auth'],
 )
-def delete_policy(policy_id: str = Path(..., alias='policyId')) -> Union[None, Error]:
+async def delete_policy(policy_id: str = Path(..., alias='policyId')) -> Union[None, Error]:
     """
     delete policy
     """
-    pass
+    return await policies_service.delete_policy(policy_id=policy_id)

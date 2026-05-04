@@ -1,5 +1,5 @@
 from .._shared import *
-from ...lakefs_client import _client
+from lakefs_api.core.lakefs_client import _client
 
 app = APIRouter()
 

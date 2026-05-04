@@ -1,14 +1,18 @@
 from .._shared import *
+from fastapi import Depends
+
+from ...core.security import get_current_user as core_get_current_user
+from ...services.auth import users as users_service
 
 app = APIRouter()
 
 
 @app.get('/user', response_model=CurrentUser, tags=['auth'])
-def get_current_user() -> CurrentUser:
+async def get_current_user(current_user: dict = Depends(core_get_current_user)) -> CurrentUser:
     """
     get current user
     """
-    pass
+    return await users_service.get_current_user(current_user)
 
 
 @app.get(
@@ -21,7 +25,7 @@ def get_current_user() -> CurrentUser:
     },
     tags=['auth'],
 )
-def list_users(
+async def list_users(
     prefix: Optional[str] = None,
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
@@ -29,7 +33,7 @@ def list_users(
     """
     list users
     """
-    pass
+    return await users_service.list_users(prefix=prefix, after=after, amount=amount)
 
 
 @app.post(
@@ -44,11 +48,11 @@ def list_users(
     },
     tags=['auth'],
 )
-def create_user(body: UserCreation = None) -> Union[None, User, Error]:
+async def create_user(body: UserCreation = None) -> Union[None, User, Error]:
     """
     create user
     """
-    pass
+    return await users_service.create_user(body)
 
 
 @app.get(
@@ -62,11 +66,11 @@ def create_user(body: UserCreation = None) -> Union[None, User, Error]:
     },
     tags=['auth'],
 )
-def get_user(user_id: str = Path(..., alias='userId')) -> Union[User, Error]:
+async def get_user(user_id: str = Path(..., alias='userId')) -> Union[User, Error]:
     """
     get user
     """
-    pass
+    return await users_service.get_user(user_id)
 
 
 @app.delete(
@@ -80,11 +84,11 @@ def get_user(user_id: str = Path(..., alias='userId')) -> Union[User, Error]:
     },
     tags=['auth'],
 )
-def delete_user(user_id: str = Path(..., alias='userId')) -> Union[None, Error]:
+async def delete_user(user_id: str = Path(..., alias='userId')) -> Union[None, Error]:
     """
     delete user
     """
-    pass
+    return await users_service.delete_user(user_id)
 
 
 @app.get(
@@ -98,7 +102,7 @@ def delete_user(user_id: str = Path(..., alias='userId')) -> Union[None, Error]:
     },
     tags=['auth'],
 )
-def list_user_credentials(
+async def list_user_credentials(
     prefix: Optional[str] = None,
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
@@ -107,7 +111,12 @@ def list_user_credentials(
     """
     list user credentials
     """
-    pass
+    return await users_service.list_user_credentials(
+        user_id=user_id,
+        prefix=prefix,
+        after=after,
+        amount=amount,
+    )
 
 
 @app.post(
@@ -122,13 +131,13 @@ def list_user_credentials(
     },
     tags=['auth'],
 )
-def create_credentials(
+async def create_credentials(
     user_id: str = Path(..., alias='userId')
 ) -> Union[None, CredentialsWithSecret, Error]:
     """
     create credentials
     """
-    pass
+    return await users_service.create_credentials(user_id=user_id)
 
 
 @app.delete(
@@ -142,14 +151,14 @@ def create_credentials(
     },
     tags=['auth'],
 )
-def delete_credentials(
+async def delete_credentials(
     user_id: str = Path(..., alias='userId'),
     access_key_id: str = Path(..., alias='accessKeyId'),
 ) -> Union[None, Error]:
     """
     delete credentials
     """
-    pass
+    return await users_service.delete_credentials(user_id=user_id, access_key_id=access_key_id)
 
 
 @app.get(
@@ -163,14 +172,14 @@ def delete_credentials(
     },
     tags=['auth'],
 )
-def get_credentials(
+async def get_credentials(
     user_id: str = Path(..., alias='userId'),
     access_key_id: str = Path(..., alias='accessKeyId'),
 ) -> Union[Credentials, Error]:
     """
     get credentials
     """
-    pass
+    return await users_service.get_credentials(user_id=user_id, access_key_id=access_key_id)
 
 
 @app.get(
@@ -184,7 +193,7 @@ def get_credentials(
     },
     tags=['auth'],
 )
-def list_user_groups(
+async def list_user_groups(
     prefix: Optional[str] = None,
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
@@ -193,7 +202,12 @@ def list_user_groups(
     """
     list user groups
     """
-    pass
+    return await users_service.list_user_groups(
+        user_id=user_id,
+        prefix=prefix,
+        after=after,
+        amount=amount,
+    )
 
 
 @app.get(
@@ -207,7 +221,7 @@ def list_user_groups(
     },
     tags=['auth'],
 )
-def list_user_policies(
+async def list_user_policies(
     prefix: Optional[str] = None,
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
@@ -217,7 +231,13 @@ def list_user_policies(
     """
     list user policies
     """
-    pass
+    return await users_service.list_user_policies(
+        user_id=user_id,
+        prefix=prefix,
+        after=after,
+        amount=amount,
+        effective=effective,
+    )
 
 
 @app.put(
@@ -231,14 +251,14 @@ def list_user_policies(
     },
     tags=['auth'],
 )
-def attach_policy_to_user(
+async def attach_policy_to_user(
     user_id: str = Path(..., alias='userId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
     """
     attach policy to user
     """
-    pass
+    return await users_service.attach_policy_to_user(user_id=user_id, policy_id=policy_id)
 
 
 @app.delete(
@@ -252,11 +272,11 @@ def attach_policy_to_user(
     },
     tags=['auth'],
 )
-def detach_policy_from_user(
+async def detach_policy_from_user(
     user_id: str = Path(..., alias='userId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
     """
     detach policy from user
     """
-    pass
+    return await users_service.detach_policy_from_user(user_id=user_id, policy_id=policy_id)
