@@ -7,7 +7,6 @@ from .refs import app as refs_router
 from .tags import app as tags_router
 from .protection import app as protection_router
 from .actions import app as actions_router
-from .objects import app as objects_router
 from .restore import app as restore_router
 from .imports import app as imports_router
 from .metadata import app as metadata_router
@@ -26,7 +25,6 @@ routers = [
     tags_router,
     protection_router,
     actions_router,
-    objects_router,
     restore_router,
     imports_router,
     metadata_router,

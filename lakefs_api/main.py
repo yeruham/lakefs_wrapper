@@ -10,6 +10,7 @@ from lakefs_sdk.exceptions import ApiException
 
 from .routes.auth.api import app as auth_router
 from .routes.repos.api import app as repos_router
+from .routes.objects.api import app as objects_router
 from .routes.setup import app as setup_router
 from .routes.config import app as config_router
 from .routes.gc import app as gc_router
@@ -28,7 +29,7 @@ app = FastAPI(
 
 app.router.prefix = '/api/v1'
 
-routers = [auth_router, repos_router, setup_router]
+routers = [auth_router, repos_router, objects_router, setup_router]
 
 for router in routers:
     app.include_router(router)

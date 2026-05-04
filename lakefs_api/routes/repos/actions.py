@@ -69,8 +69,6 @@ def list_run_hooks(
     pass
 
 
-
-
 @app.get(
     '/repositories/{repository}/actions/runs/{run_id}/hooks/{hook_run_id}/output',
     response_model=bytes,

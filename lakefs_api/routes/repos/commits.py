@@ -47,29 +47,6 @@ def cherry_pick(
     raise NotImplementedError
 
 
-
-@app.get(
-    '/repositories/{repository}/branches/{branch}/diff',
-    response_model=DiffList,
-    responses={
-        '400': {'model': Error},
-        '401': {'model': Error},
-        '404': {'model': Error},
-        'default': {'model': Error},
-    },
-    tags=['branches'],
-)
-def diff_branch(
-    after: Optional[str] = None,
-    amount: Optional[conint(ge=-1, le=1000)] = 100,
-    prefix: Optional[str] = None,
-    delimiter: Optional[str] = None,
-    repository: str = ...,
-    branch: str = ...,
-) -> Union[DiffList, Error]:
-    return _client.branches_api.diff_branch(repository=repository, branch=branch, prefix=prefix, amount=amount, after=after, delimiter=delimiter)
-
-
 @app.put(
     '/repositories/{repository}/branches/{branch}/hard_reset',
     response_model=None,
