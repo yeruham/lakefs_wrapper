@@ -30,9 +30,9 @@ async def _collect_all_policies(user_in_db: UserInDB) -> list[Policy]:
     return await get_policies_by_ids(list(policy_ids))
 
 
-async def is_allowed(user: User, action: LakeFSAction, repo_id: str) -> bool:
+async def is_allowed(user_id: str, action: LakeFSAction, repo_id: str) -> bool:
 
-    user_in_db = await get_user_by_id(user.id)
+    user_in_db = await get_user_by_id(user_id)
     if user_in_db is None:
         return False
 
@@ -49,9 +49,9 @@ async def is_allowed(user: User, action: LakeFSAction, repo_id: str) -> bool:
     return any(s.effect == Effect.allow for s in matching)
 
 
-async def require_permission(user: User, action: LakeFSAction, repo_id: str) -> None:
-    if not await is_allowed(user, action, repo_id):
+async def require_permission(user_id: str, action: LakeFSAction, repo_id: str) -> None:
+    if not await is_allowed(user_id, action, repo_id):
         raise PermissionError(
-            f"User '{user.id}' is not allowed to perform "
+            f"User '{user_id}' is not allowed to perform "
             f"'{action.value}' on repo '{repo_id}'"
         )

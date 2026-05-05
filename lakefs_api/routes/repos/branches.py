@@ -15,13 +15,15 @@ app = APIRouter()
     },
     tags=['branches'],
 )
-def list_branches(
+async def list_branches(
     prefix: Optional[str] = None,
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     show_hidden: Optional[bool] = False,
     repository: str = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[RefList, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.branches_api.list_branches(repository=repository, prefix=prefix, after=after, amount=amount, show_hidden=show_hidden)
 
 
@@ -40,9 +42,12 @@ def list_branches(
     },
     tags=['branches'],
 )
-def create_branch(
-    repository: str, body: BranchCreation = ...
+async def create_branch(
+    repository: str,
+    body: BranchCreation = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, str, Error]:
+    await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.branches_api.create_branch(repository, body)
 
 
@@ -57,7 +62,12 @@ def create_branch(
     },
     tags=['branches'],
 )
-def get_branch(repository: str, branch: str = ...) -> Union[Ref, Error]:
+async def get_branch(
+    repository: str,
+    branch: str = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
+) -> Union[Ref, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.branches_api.get_branch(repository=repository, branch=branch)
 
 
@@ -73,9 +83,13 @@ def get_branch(repository: str, branch: str = ...) -> Union[Ref, Error]:
     },
     tags=['branches'],
 )
-def delete_branch(
-    force: Optional[bool] = False, repository: str = ..., branch: str = ...
+async def delete_branch(
+    force: Optional[bool] = False,
+    repository: str = ...,
+    branch: str = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Error]:
+    await require_permission(current_user.username, LakeFSAction.delete, repository)
     return _client.branches_api.delete_branch(repository=repository, branch=branch, force=force)
 
 
@@ -91,9 +105,13 @@ def delete_branch(
     },
     tags=['branches'],
 )
-def reset_branch(
-    repository: str, branch: str = ..., body: ResetCreation = ...
+async def reset_branch(
+    repository: str,
+    branch: str = ...,
+    body: ResetCreation = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Error]:
+    await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.branches_api.reset_branch(repository=repository, branch=branch, reset_creation=body)
 
 
@@ -110,9 +128,13 @@ def reset_branch(
     },
     tags=['branches'],
 )
-def revert_branch(
-    repository: str, branch: str = ..., body: RevertCreation = ...
+async def revert_branch(
+    repository: str,
+    branch: str = ...,
+    body: RevertCreation = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Error]:
+    await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.branches_api.revert_branch(repository=repository, branch=branch, revert_creation=body)
 
 
@@ -127,12 +149,14 @@ def revert_branch(
     },
     tags=['branches'],
 )
-def diff_branch(
+async def diff_branch(
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     prefix: Optional[str] = None,
     delimiter: Optional[str] = None,
     repository: str = ...,
     branch: str = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[DiffList, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.branches_api.diff_branch(repository=repository, branch=branch, prefix=prefix, amount=amount, after=after, delimiter=delimiter)

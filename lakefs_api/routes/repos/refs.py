@@ -15,7 +15,7 @@ app = APIRouter()
     },
     tags=['refs'],
 )
-def diff_refs(
+async def diff_refs(
     repository: str,
     left_ref: str = Path(..., alias='leftRef'),
     right_ref: str = Path(..., alias='rightRef'),
@@ -25,7 +25,9 @@ def diff_refs(
     delimiter: Optional[str] = None,
     type: Optional[Type4] = ...,
     include_right_stats: Optional[bool] = False,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[DiffList, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.refs_api.diff_refs(repository=repository, left_ref=left_ref, right_ref=right_ref, prefix=prefix, after=after, amount=amount, delimiter=delimiter, type=type, include_right_stats=include_right_stats)
 
 
@@ -40,7 +42,7 @@ def diff_refs(
     },
     tags=['refs'],
 )
-def log_commits(
+async def log_commits(
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     objects: Optional[List[str]] = None,
@@ -51,7 +53,9 @@ def log_commits(
     stop_at: Optional[str] = None,
     repository: str = ...,
     ref: str = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[CommitList, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.refs_api.log_commits(repository=repository, ref=ref, after=after, amount=amount, objects=objects, prefixes=prefixes, limit=limit, first_parent=first_parent, since=since, stop_at=stop_at)
 
 
@@ -69,10 +73,7 @@ def log_commits(
 def get_underlying_properties(
     repository: str, ref: str = ..., path: str = ...
 ) -> Union[UnderlyingObjectProperties, Error]:
-    """
-    get object properties on underlying storage
-    """
-    pass
+    raise NotImplementedError
 
 
 @app.post(
@@ -89,12 +90,14 @@ def get_underlying_properties(
     },
     tags=['refs'],
 )
-def merge_into_branch(
+async def merge_into_branch(
     repository: str,
     source_ref: str = Path(..., alias='sourceRef'),
     destination_branch: str = Path(..., alias='destinationBranch'),
     body: Merge = None,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[MergeResult, Error]:
+    await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.refs_api.merge_into_branch(repository=repository, source_ref=source_ref, destination_branch=destination_branch, merge=body)
 
 
@@ -109,9 +112,11 @@ def merge_into_branch(
     },
     tags=['refs'],
 )
-def find_merge_base(
+async def find_merge_base(
     repository: str,
     source_ref: str = Path(..., alias='sourceRef'),
     destination_branch: str = Path(..., alias='destinationBranch'),
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[FindMergeBaseResult, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.refs_api.find_merge_base(repository=repository, source_ref=source_ref, destination_branch=destination_branch)

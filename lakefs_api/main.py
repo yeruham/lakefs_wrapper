@@ -6,14 +6,23 @@ from __future__ import annotations
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response, JSONResponse
+from contextlib import asynccontextmanager
 from lakefs_sdk.exceptions import ApiException
 
+from .core.database import connect_db, close_db
 from .routes.auth.api import app as auth_router
 from .routes.repos.api import app as repos_router
 from .routes.objects.api import app as objects_router
 from .routes.setup import app as setup_router
 from .routes.config import app as config_router
 from .routes.gc import app as gc_router
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await connect_db()
+    yield
+    await close_db()
 
 
 app = FastAPI(
@@ -25,6 +34,7 @@ app = FastAPI(
     },
     version='1.0.0',
     servers=[{'url': '/api/v1', 'description': 'lakeFS server endpoint'}],
+    lifespan=lifespan
 )
 
 app.router.prefix = '/api/v1'

@@ -15,12 +15,14 @@ app = APIRouter()
     },
     tags=['tags'],
 )
-def list_tags(
+async def list_tags(
     prefix: Optional[str] = None,
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     repository: str = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[RefList, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.tags_api.list_tags(repository=repository, prefix=prefix, after=after, amount=amount)
 
 
@@ -39,7 +41,12 @@ def list_tags(
     },
     tags=['tags'],
 )
-def create_tag(repository: str, body: TagCreation = ...) -> Union[None, Ref, Error]:
+async def create_tag(
+    repository: str,
+    body: TagCreation = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
+) -> Union[None, Ref, Error]:
+    await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.tags_api.create_tag(repository=repository, tag_creation=body)
 
 
@@ -54,7 +61,12 @@ def create_tag(repository: str, body: TagCreation = ...) -> Union[None, Ref, Err
     },
     tags=['tags'],
 )
-def get_tag(repository: str, tag: str = ...) -> Union[Ref, Error]:
+async def get_tag(
+    repository: str,
+    tag: str = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
+) -> Union[Ref, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.tags_api.get_tag(repository=repository, tag=tag)
 
 
@@ -70,7 +82,11 @@ def get_tag(repository: str, tag: str = ...) -> Union[Ref, Error]:
     },
     tags=['tags'],
 )
-def delete_tag(
-    force: Optional[bool] = None, repository: str = ..., tag: str = ...
+async def delete_tag(
+    force: Optional[bool] = None,
+    repository: str = ...,
+    tag: str = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Error]:
-    return _client.tags_api.delete_tag(repository=repository, force=force)
+    await require_permission(current_user.username, LakeFSAction.delete, repository)
+    return _client.tags_api.delete_tag(repository=repository, tag=tag, force=force)

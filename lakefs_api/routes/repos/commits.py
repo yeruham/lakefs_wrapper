@@ -20,12 +20,14 @@ app = APIRouter()
     },
     tags=['commits'],
 )
-def commit(
+async def commit(
     source_metarange: Optional[str] = None,
     repository: str = ...,
     branch: str = ...,
     body: CommitCreation = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Commit, Error]:
+    await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.commits_api.commit(repository=repository, branch=branch, source_metarange=source_metarange, commit_creation=body)
 
 @app.post(
@@ -78,7 +80,10 @@ def hard_reset_branch(
     },
     tags=['commits'],
 )
-def get_commit(
-    repository: str, commit_id: str = Path(..., alias='commitId')
+async def get_commit(
+    repository: str,
+    commit_id: str = Path(..., alias='commitId'),
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[Commit, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.commits_api.get_commit(repository=repository, commit_id=commit_id)

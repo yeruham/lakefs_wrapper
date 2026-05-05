@@ -14,12 +14,14 @@ app = APIRouter()
     },
     tags=['repositories'],
 )
-def list_repositories(
+async def list_repositories(
     prefix: Optional[str] = None,
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     search: Optional[str] = None,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[RepositoryList, Error]:
+    # await require_permission(current_user.username, LakeFSAction.read, "*")
     return _client.repositories_api.list_repositories(prefix=prefix, after=after, amount=amount, search=search)
 
 
@@ -36,8 +38,10 @@ def list_repositories(
     },
     tags=['repositories'],
 )
-def create_repository(
-    bare: Optional[bool] = False, body: RepositoryCreation = ...
+async def create_repository(
+    bare: Optional[bool] = False,
+    body: RepositoryCreation = ...,
+    current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Repository, Error]:
     repo = _client.repositories_api.create_repository(repository_creation=body, bare=bare)
     if repo:
@@ -55,7 +59,11 @@ def create_repository(
     },
     tags=['repositories'],
 )
-def get_repository(repository: str) -> Union[Repository, Error]:
+async def get_repository(
+    repository: str,
+    current_user: BasicUser = Depends(core_get_current_user),
+) -> Union[Repository, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.repositories_api.get_repository(repository=repository)
 
 
@@ -87,7 +95,11 @@ def delete_repository(
     },
     tags=['repositories'],
 )
-def get_repository_metadata(repository: str) -> Union[RepositoryMetadata, Error]:
+async def get_repository_metadata(
+    repository: str,
+    current_user: BasicUser = Depends(core_get_current_user),
+) -> Union[RepositoryMetadata, Error]:
+    await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.repositories_api.get_repository(repository=repository)
 
 

@@ -6,7 +6,7 @@ from typing import Any, Optional
 from fastapi import HTTPException, status
 
 from ...core.database import _policies_collection
-from utils import _now_ts, _paginate
+from .utils import _now_ts, _paginate
 from lakefs_api.models import Pagination, Policy, PolicyList
 
 

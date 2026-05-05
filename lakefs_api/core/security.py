@@ -1,11 +1,13 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+from pydantic import BaseModel
 
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 import base64
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from pydantic import BaseModel
 
 from .config import get_settings
 
@@ -13,6 +15,11 @@ settings = get_settings()
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login")
+
+
+class BasicUser(BaseModel):
+    username: str
+    groups: list[str]
 
 
 # ── Password helpers ──────────────────────────────────────────────────────────
@@ -47,22 +54,22 @@ def decode_token(token: str) -> dict:
         )
 
 
-def get_current_user_jwt(token: str = Depends(oauth2_scheme)) -> dict:
+def get_current_user_jwt(token: str = Depends(oauth2_scheme)) -> BasicUser:
     """FastAPI dependency – injects the decoded token payload."""
     payload = decode_token(token)
     username: str = payload.get("sub")
     if not username:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-    return {"username": username, "groups": payload.get("groups", [])}
+    return BasicUser(username=username, groups=payload.get("groups", []))
 
 
-def get_current_user_basic(encoded: str) -> dict:
+def get_current_user_basic(encoded: str) -> BasicUser:
     decoded = base64.b64decode(encoded).decode()
     access_key, secret_key = decoded.split(":")
-    return {"username": access_key, "groups": []}
+    return BasicUser(username=access_key, groups = [])
 
 
-def get_current_user(request: Request):
+def get_current_user(request: Request) -> BasicUser:
     auth = request.headers.get("Authorization")
 
     if not auth:

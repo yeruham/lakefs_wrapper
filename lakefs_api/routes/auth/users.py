@@ -1,5 +1,4 @@
 from .._shared import *
-from fastapi import Depends
 
 from ...core.security import get_current_user as core_get_current_user
 from ...services.auth import users as users_service
@@ -104,6 +103,7 @@ async def list_user_credentials(
 @app.post(
     '/auth/users/{userId}/credentials',
     response_model=None,
+    status_code=201,
     responses={
         '201': {'model': CredentialsWithSecret},
         '400': {'model': Error},
