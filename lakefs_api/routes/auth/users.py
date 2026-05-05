@@ -9,9 +9,6 @@ app = APIRouter()
 
 @app.get('/user', response_model=CurrentUser, tags=['auth'])
 async def get_current_user(current_user: dict = Depends(core_get_current_user)) -> CurrentUser:
-    """
-    get current user
-    """
     return await users_service.get_current_user(current_user)
 
 
@@ -30,9 +27,6 @@ async def list_users(
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
 ) -> Union[UserList, Error]:
-    """
-    list users
-    """
     return await users_service.list_users(prefix=prefix, after=after, amount=amount)
 
 
@@ -49,9 +43,6 @@ async def list_users(
     tags=['auth'],
 )
 async def create_user(body: UserCreation = None) -> Union[None, User, Error]:
-    """
-    create user
-    """
     return await users_service.create_user(body)
 
 
@@ -67,9 +58,6 @@ async def create_user(body: UserCreation = None) -> Union[None, User, Error]:
     tags=['auth'],
 )
 async def get_user(user_id: str = Path(..., alias='userId')) -> Union[User, Error]:
-    """
-    get user
-    """
     return await users_service.get_user(user_id)
 
 
@@ -85,9 +73,6 @@ async def get_user(user_id: str = Path(..., alias='userId')) -> Union[User, Erro
     tags=['auth'],
 )
 async def delete_user(user_id: str = Path(..., alias='userId')) -> Union[None, Error]:
-    """
-    delete user
-    """
     return await users_service.delete_user(user_id)
 
 
@@ -108,9 +93,6 @@ async def list_user_credentials(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     user_id: str = Path(..., alias='userId'),
 ) -> Union[CredentialsList, Error]:
-    """
-    list user credentials
-    """
     return await users_service.list_user_credentials(
         user_id=user_id,
         prefix=prefix,
@@ -134,9 +116,6 @@ async def list_user_credentials(
 async def create_credentials(
     user_id: str = Path(..., alias='userId')
 ) -> Union[None, CredentialsWithSecret, Error]:
-    """
-    create credentials
-    """
     return await users_service.create_credentials(user_id=user_id)
 
 
@@ -155,9 +134,6 @@ async def delete_credentials(
     user_id: str = Path(..., alias='userId'),
     access_key_id: str = Path(..., alias='accessKeyId'),
 ) -> Union[None, Error]:
-    """
-    delete credentials
-    """
     return await users_service.delete_credentials(user_id=user_id, access_key_id=access_key_id)
 
 
@@ -176,9 +152,6 @@ async def get_credentials(
     user_id: str = Path(..., alias='userId'),
     access_key_id: str = Path(..., alias='accessKeyId'),
 ) -> Union[Credentials, Error]:
-    """
-    get credentials
-    """
     return await users_service.get_credentials(user_id=user_id, access_key_id=access_key_id)
 
 
@@ -199,9 +172,6 @@ async def list_user_groups(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     user_id: str = Path(..., alias='userId'),
 ) -> Union[GroupList, Error]:
-    """
-    list user groups
-    """
     return await users_service.list_user_groups(
         user_id=user_id,
         prefix=prefix,
@@ -228,9 +198,6 @@ async def list_user_policies(
     effective: Optional[bool] = False,
     user_id: str = Path(..., alias='userId'),
 ) -> Union[PolicyList, Error]:
-    """
-    list user policies
-    """
     return await users_service.list_user_policies(
         user_id=user_id,
         prefix=prefix,
@@ -255,9 +222,6 @@ async def attach_policy_to_user(
     user_id: str = Path(..., alias='userId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
-    """
-    attach policy to user
-    """
     return await users_service.attach_policy_to_user(user_id=user_id, policy_id=policy_id)
 
 
@@ -276,7 +240,4 @@ async def detach_policy_from_user(
     user_id: str = Path(..., alias='userId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
-    """
-    detach policy from user
-    """
     return await users_service.detach_policy_from_user(user_id=user_id, policy_id=policy_id)

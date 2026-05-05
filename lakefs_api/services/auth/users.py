@@ -220,6 +220,10 @@ async def attach_policy_to_user(user_id: str, policy_id: str) -> None:
 
 
 async def detach_policy_from_user(user_id: str, policy_id: str) -> None:
-    res = await _users_collection().update_one({"id": user_id}, {"$pull": {"policy_ids": policy_id}})
-    if res.matched_count == 0:
+    u = await _users_collection().find_one({"id": user_id}, {"_id": 1})
+    p = await _policies_collection().find_one({"id": policy_id}, {"_id": 1})
+    if not u:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    if not p:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Policy not found")
+    await _users_collection().update_one({"id": user_id}, {"$addToSet": {"policy_ids": policy_id}})

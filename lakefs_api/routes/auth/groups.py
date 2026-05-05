@@ -20,9 +20,6 @@ async def list_groups(
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
 ) -> Union[GroupList, Error]:
-    """
-    list groups
-    """
     return await groups_service.list_groups(prefix=prefix, after=after, amount=amount)
 
 
@@ -39,9 +36,6 @@ async def list_groups(
     tags=['auth'],
 )
 async def create_group(body: GroupCreation = None) -> Union[None, Group, Error]:
-    """
-    create group
-    """
     return await groups_service.create_group(body)
 
 
@@ -57,9 +51,6 @@ async def create_group(body: GroupCreation = None) -> Union[None, Group, Error]:
     tags=['auth'],
 )
 async def get_group(group_id: str = Path(..., alias='groupId')) -> Union[Group, Error]:
-    """
-    get group
-    """
     return await groups_service.get_group(group_id)
 
 
@@ -75,9 +66,6 @@ async def get_group(group_id: str = Path(..., alias='groupId')) -> Union[Group, 
     tags=['auth'],
 )
 async def delete_group(group_id: str = Path(..., alias='groupId')) -> Union[None, Error]:
-    """
-    delete group
-    """
     return await groups_service.delete_group(group_id)
 
 
@@ -95,9 +83,6 @@ async def delete_group(group_id: str = Path(..., alias='groupId')) -> Union[None
 async def set_group_a_c_l(
     group_id: str = Path(..., alias='groupId'), body: ACL = ...
 ) -> Union[None, Error]:
-    """
-    set ACL of group
-    """
     return await groups_service.set_group_acl(group_id=group_id, body=body)
 
 
@@ -115,9 +100,6 @@ async def set_group_a_c_l(
 async def get_group_a_c_l(
     group_id: str = Path(..., alias='groupId')
 ) -> Union[ACL, Error, ErrorNoACL]:
-    """
-    get ACL of group
-    """
     return await groups_service.get_group_acl(group_id=group_id)
 
 
@@ -137,9 +119,6 @@ async def list_group_members(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     group_id: str = Path(..., alias='groupId'),
 ) -> Union[UserList, Error]:
-    """
-    list group members
-    """
     return await groups_service.list_group_members(
         group_id=group_id,
         prefix=prefix,
@@ -162,9 +141,6 @@ async def list_group_members(
 async def add_group_membership(
     group_id: str = Path(..., alias='groupId'), user_id: str = Path(..., alias='userId')
 ) -> Union[None, Error]:
-    """
-    add group membership
-    """
     return await groups_service.add_group_membership(group_id=group_id, user_id=user_id)
 
 
@@ -182,9 +158,6 @@ async def add_group_membership(
 async def delete_group_membership(
     group_id: str = Path(..., alias='groupId'), user_id: str = Path(..., alias='userId')
 ) -> Union[None, Error]:
-    """
-    delete group membership
-    """
     return await groups_service.delete_group_membership(group_id=group_id, user_id=user_id)
 
 
@@ -205,9 +178,6 @@ async def list_group_policies(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     group_id: str = Path(..., alias='groupId'),
 ) -> Union[PolicyList, Error]:
-    """
-    list group policies
-    """
     return await groups_service.list_group_policies(
         group_id=group_id,
         prefix=prefix,
@@ -231,9 +201,6 @@ async def attach_policy_to_group(
     group_id: str = Path(..., alias='groupId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
-    """
-    attach policy to group
-    """
     return await groups_service.attach_policy_to_group(group_id=group_id, policy_id=policy_id)
 
 
@@ -252,7 +219,4 @@ async def detach_policy_from_group(
     group_id: str = Path(..., alias='groupId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
-    """
-    detach policy from group
-    """
     return await groups_service.detach_policy_from_group(group_id=group_id, policy_id=policy_id)
