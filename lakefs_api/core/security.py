@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
+import base64
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
@@ -10,7 +11,7 @@ from .config import get_settings
 
 settings = get_settings()
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login")
 
 
@@ -46,7 +47,7 @@ def decode_token(token: str) -> dict:
         )
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
+def get_current_user_jwt(token: str = Depends(oauth2_scheme)) -> dict:
     """FastAPI dependency – injects the decoded token payload."""
     payload = decode_token(token)
     username: str = payload.get("sub")
@@ -55,8 +56,24 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
     return {"username": username, "groups": payload.get("groups", [])}
 
 
-async def require_admin(current_user: dict = Depends(get_current_user)) -> dict:
-    """Dependency that ensures the caller is in the 'admins' group."""
-    if "admins" not in current_user.get("groups", []):
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
-    return current_user
+def get_current_user_basic(encoded: str) -> dict:
+    decoded = base64.b64decode(encoded).decode()
+    access_key, secret_key = decoded.split(":")
+    return {"username": access_key, "groups": []}
+
+
+def get_current_user(request: Request):
+    auth = request.headers.get("Authorization")
+
+    if not auth:
+        raise HTTPException(status_code=401, detail="Missing authorization header")
+
+    if auth.startswith("Bearer "):
+        token = auth.replace("Bearer ", "")
+        return get_current_user_jwt(token=token)
+
+    if auth.startswith("Basic "):
+        encoded = auth.replace("Basic ", "")
+        return get_current_user_basic(encoded=encoded)
+
+    raise HTTPException(status_code=401, detail="Unsupported auth type")
