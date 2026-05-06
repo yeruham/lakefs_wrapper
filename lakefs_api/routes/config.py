@@ -1,4 +1,5 @@
 from ._shared import *
+from ..core.config import DEFAULT_LAKEFS_SERVER_CONFIG
 
 app = APIRouter()
 
@@ -10,8 +11,8 @@ app = APIRouter()
     tags=['config'],
 )
 def get_config() -> Union[Config, Error]:
-    pass
-
+    default_config = DEFAULT_LAKEFS_SERVER_CONFIG
+    return Config.model_validate(default_config)
 
 @app.get(
     '/config/garbage-collection',

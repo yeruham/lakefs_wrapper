@@ -39,7 +39,7 @@ app = FastAPI(
 
 app.router.prefix = '/api/v1'
 
-routers = [auth_router, repos_router, objects_router, setup_router]
+routers = [auth_router, repos_router, objects_router, setup_router, config_router]
 
 for router in routers:
     app.include_router(router)

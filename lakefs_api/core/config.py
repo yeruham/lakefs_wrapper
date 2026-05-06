@@ -32,3 +32,32 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+
+
+#lakefs-server
+DEFAULT_LAKEFS_SERVER_CONFIG = {
+    "capabilities_config": {
+        "async_ops": False
+    },
+    "storage_config": {
+        "blockstore_description": "",
+        "blockstore_id": "",
+        "blockstore_namespace_ValidityRegex": "^local://",
+        "blockstore_namespace_example": "local://example-bucket/",
+        "blockstore_type": "local",
+        "default_namespace_prefix": "local://",
+        "import_support": False,
+        "import_validity_regex": "^local://",
+        "pre_sign_multipart_upload": False,
+        "pre_sign_support": False,
+        "pre_sign_support_ui": False
+    },
+    "storage_config_list": [],
+    "ui_config": {},
+    "version_config": {
+        "latest_version": "1.80.0",
+        "upgrade_recommended": False,
+        "version": "1.80.0",
+        "version_context": "lakeFS"
+    }
+}
