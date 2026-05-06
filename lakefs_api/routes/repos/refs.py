@@ -23,12 +23,14 @@ async def diff_refs(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     prefix: Optional[str] = None,
     delimiter: Optional[str] = None,
-    type: Optional[Type4] = ...,
+    type: Optional[Type4] = None,
     include_right_stats: Optional[bool] = False,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[DiffList, Error]:
     # await require_permission(current_user.username, LakeFSAction.read, repository)
-    return _client.refs_api.diff_refs(repository=repository, left_ref=left_ref, right_ref=right_ref, prefix=prefix, after=after, amount=amount, delimiter=delimiter, type=type, include_right_stats=include_right_stats)
+    diff_list = _client.refs_api.diff_refs(repository=repository, left_ref=left_ref, right_ref=right_ref, prefix=prefix, after=after, amount=amount, delimiter=delimiter, type=type, include_right_stats=include_right_stats)
+    if diff_list:
+        return diff_list
 
 
 @app.get(

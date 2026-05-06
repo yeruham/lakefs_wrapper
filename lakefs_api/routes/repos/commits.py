@@ -28,7 +28,9 @@ async def commit(
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Commit, Error]:
     # await require_permission(current_user.username, LakeFSAction.write, repository)
-    return _client.commits_api.commit(repository=repository, branch=branch, source_metarange=source_metarange, commit_creation=body)
+    commit = _client.commits_api.commit(repository=repository, branch=branch, source_metarange=source_metarange, commit_creation=body)
+    if commit:
+        return Commit.model_validate(commit.dict())
 
 @app.post(
     '/repositories/{repository}/branches/{branch}/cherry-pick',

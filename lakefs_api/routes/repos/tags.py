@@ -47,7 +47,9 @@ async def create_tag(
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Ref, Error]:
     # await require_permission(current_user.username, LakeFSAction.write, repository)
-    return _client.tags_api.create_tag(repository=repository, tag_creation=body)
+    ref = _client.tags_api.create_tag(repository=repository, tag_creation=body)
+    if ref:
+        return Ref.model_validate(ref.dict())
 
 
 @app.get(
