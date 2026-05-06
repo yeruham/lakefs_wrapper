@@ -63,7 +63,7 @@ async def get_repository(
     repository: str,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[Repository, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.repositories_api.get_repository(repository=repository)
 
 
@@ -99,7 +99,7 @@ async def get_repository_metadata(
     repository: str,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[RepositoryMetadata, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.repositories_api.get_repository(repository=repository)
 
 

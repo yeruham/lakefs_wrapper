@@ -20,7 +20,8 @@ async def list_policies(
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
 ) -> Union[PolicyList, Error]:
-    return await policies_service.list_policies(prefix=prefix, after=after, amount=amount)
+    # return await policies_service.list_policies(prefix=prefix, after=after, amount=amount)
+    pass
 
 
 @app.post(
@@ -37,7 +38,8 @@ async def list_policies(
     tags=['auth'],
 )
 async def create_policy(body: Policy) -> Union[None, Policy, Error]:
-    return await policies_service.create_policy(body=body)
+    # return await policies_service.create_policy(body=body)
+    raise NotImplementedError
 
 
 @app.get(
@@ -52,8 +54,8 @@ async def create_policy(body: Policy) -> Union[None, Policy, Error]:
     tags=['auth'],
 )
 async def get_policy(policy_id: str = Path(..., alias='policyId')) -> Union[Policy, Error]:
-    return await policies_service.get_policy(policy_id=policy_id)
-
+    # return await policies_service.get_policy(policy_id=policy_id)
+    raise NotImplementedError
 
 @app.put(
     '/auth/policies/{policyId}',
@@ -69,8 +71,8 @@ async def get_policy(policy_id: str = Path(..., alias='policyId')) -> Union[Poli
 async def update_policy(
     policy_id: str = Path(..., alias='policyId'), body: Policy = ...
 ) -> Union[Policy, Error]:
-    return await policies_service.update_policy(policy_id=policy_id, body=body)
-
+    # return await policies_service.update_policy(policy_id=policy_id, body=body)
+    raise NotImplementedError
 
 @app.delete(
     '/auth/policies/{policyId}',
@@ -84,4 +86,5 @@ async def update_policy(
     tags=['auth'],
 )
 async def delete_policy(policy_id: str = Path(..., alias='policyId')) -> Union[None, Error]:
-    return await policies_service.delete_policy(policy_id=policy_id)
+    # return await policies_service.delete_policy(policy_id=policy_id)
+    raise NotImplementedError

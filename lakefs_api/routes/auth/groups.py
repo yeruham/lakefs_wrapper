@@ -20,8 +20,8 @@ async def list_groups(
     after: Optional[str] = None,
     amount: Optional[conint(ge=-1, le=1000)] = 100,
 ) -> Union[GroupList, Error]:
-    return await groups_service.list_groups(prefix=prefix, after=after, amount=amount)
-
+    # return await groups_service.list_groups(prefix=prefix, after=after, amount=amount)
+    raise NotImplementedError
 
 @app.post(
     '/auth/groups',
@@ -36,8 +36,8 @@ async def list_groups(
     tags=['auth'],
 )
 async def create_group(body: GroupCreation = None) -> Union[None, Group, Error]:
-    return await groups_service.create_group(body)
-
+    # return await groups_service.create_group(body)
+    raise NotImplementedError
 
 @app.get(
     '/auth/groups/{groupId}',
@@ -51,8 +51,8 @@ async def create_group(body: GroupCreation = None) -> Union[None, Group, Error]:
     tags=['auth'],
 )
 async def get_group(group_id: str = Path(..., alias='groupId')) -> Union[Group, Error]:
-    return await groups_service.get_group(group_id)
-
+    # return await groups_service.get_group(group_id)
+    raise NotImplementedError
 
 @app.delete(
     '/auth/groups/{groupId}',
@@ -66,8 +66,8 @@ async def get_group(group_id: str = Path(..., alias='groupId')) -> Union[Group, 
     tags=['auth'],
 )
 async def delete_group(group_id: str = Path(..., alias='groupId')) -> Union[None, Error]:
-    return await groups_service.delete_group(group_id)
-
+    # return await groups_service.delete_group(group_id)
+    raise NotImplementedError
 
 @app.post(
     '/auth/groups/{groupId}/acl',
@@ -83,8 +83,8 @@ async def delete_group(group_id: str = Path(..., alias='groupId')) -> Union[None
 async def set_group_a_c_l(
     group_id: str = Path(..., alias='groupId'), body: ACL = ...
 ) -> Union[None, Error]:
-    return await groups_service.set_group_acl(group_id=group_id, body=body)
-
+    # return await groups_service.set_group_acl(group_id=group_id, body=body)
+    raise NotImplementedError
 
 @app.get(
     '/auth/groups/{groupId}/acl',
@@ -100,8 +100,8 @@ async def set_group_a_c_l(
 async def get_group_a_c_l(
     group_id: str = Path(..., alias='groupId')
 ) -> Union[ACL, Error, ErrorNoACL]:
-    return await groups_service.get_group_acl(group_id=group_id)
-
+    # return await groups_service.get_group_acl(group_id=group_id)
+    raise NotImplementedError
 
 @app.get(
     '/auth/groups/{groupId}/members',
@@ -119,12 +119,13 @@ async def list_group_members(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     group_id: str = Path(..., alias='groupId'),
 ) -> Union[UserList, Error]:
-    return await groups_service.list_group_members(
-        group_id=group_id,
-        prefix=prefix,
-        after=after,
-        amount=amount,
-    )
+    # return await groups_service.list_group_members(
+    #     group_id=group_id,
+    #     prefix=prefix,
+    #     after=after,
+    #     amount=amount,
+    # )
+    raise NotImplementedError
 
 
 @app.put(
@@ -141,8 +142,8 @@ async def list_group_members(
 async def add_group_membership(
     group_id: str = Path(..., alias='groupId'), user_id: str = Path(..., alias='userId')
 ) -> Union[None, Error]:
-    return await groups_service.add_group_membership(group_id=group_id, user_id=user_id)
-
+    # return await groups_service.add_group_membership(group_id=group_id, user_id=user_id)
+    raise NotImplementedError
 
 @app.delete(
     '/auth/groups/{groupId}/members/{userId}',
@@ -158,8 +159,8 @@ async def add_group_membership(
 async def delete_group_membership(
     group_id: str = Path(..., alias='groupId'), user_id: str = Path(..., alias='userId')
 ) -> Union[None, Error]:
-    return await groups_service.delete_group_membership(group_id=group_id, user_id=user_id)
-
+    # return await groups_service.delete_group_membership(group_id=group_id, user_id=user_id)
+    raise NotImplementedError
 
 @app.get(
     '/auth/groups/{groupId}/policies',
@@ -178,13 +179,13 @@ async def list_group_policies(
     amount: Optional[conint(ge=-1, le=1000)] = 100,
     group_id: str = Path(..., alias='groupId'),
 ) -> Union[PolicyList, Error]:
-    return await groups_service.list_group_policies(
-        group_id=group_id,
-        prefix=prefix,
-        after=after,
-        amount=amount,
-    )
-
+    # return await groups_service.list_group_policies(
+    #     group_id=group_id,
+    #     prefix=prefix,
+    #     after=after,
+    #     amount=amount,
+    # )
+    raise NotImplementedError
 
 @app.put(
     '/auth/groups/{groupId}/policies/{policyId}',
@@ -201,8 +202,8 @@ async def attach_policy_to_group(
     group_id: str = Path(..., alias='groupId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
-    return await groups_service.attach_policy_to_group(group_id=group_id, policy_id=policy_id)
-
+    # return await groups_service.attach_policy_to_group(group_id=group_id, policy_id=policy_id)
+    raise NotImplementedError
 
 @app.delete(
     '/auth/groups/{groupId}/policies/{policyId}',
@@ -219,4 +220,5 @@ async def detach_policy_from_group(
     group_id: str = Path(..., alias='groupId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
-    return await groups_service.detach_policy_from_group(group_id=group_id, policy_id=policy_id)
+    # return await groups_service.detach_policy_from_group(group_id=group_id, policy_id=policy_id)
+    raise NotImplementedError

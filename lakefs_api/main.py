@@ -18,11 +18,11 @@ from .routes.config import app as config_router
 from .routes.gc import app as gc_router
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await connect_db()
-    yield
-    await close_db()
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     await connect_db()
+#     yield
+#     await close_db()
 
 
 app = FastAPI(
@@ -34,7 +34,7 @@ app = FastAPI(
     },
     version='1.0.0',
     servers=[{'url': '/api/v1', 'description': 'lakeFS server endpoint'}],
-    lifespan=lifespan
+    # lifespan=lifespan
 )
 
 app.router.prefix = '/api/v1'

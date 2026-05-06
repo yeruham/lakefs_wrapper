@@ -27,7 +27,7 @@ async def diff_refs(
     include_right_stats: Optional[bool] = False,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[DiffList, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.refs_api.diff_refs(repository=repository, left_ref=left_ref, right_ref=right_ref, prefix=prefix, after=after, amount=amount, delimiter=delimiter, type=type, include_right_stats=include_right_stats)
 
 
@@ -55,7 +55,7 @@ async def log_commits(
     ref: str = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[CommitList, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.refs_api.log_commits(repository=repository, ref=ref, after=after, amount=amount, objects=objects, prefixes=prefixes, limit=limit, first_parent=first_parent, since=since, stop_at=stop_at)
 
 
@@ -97,7 +97,7 @@ async def merge_into_branch(
     body: Merge = None,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[MergeResult, Error]:
-    await require_permission(current_user.username, LakeFSAction.write, repository)
+    # await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.refs_api.merge_into_branch(repository=repository, source_ref=source_ref, destination_branch=destination_branch, merge=body)
 
 
@@ -118,5 +118,5 @@ async def find_merge_base(
     destination_branch: str = Path(..., alias='destinationBranch'),
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[FindMergeBaseResult, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.refs_api.find_merge_base(repository=repository, source_ref=source_ref, destination_branch=destination_branch)

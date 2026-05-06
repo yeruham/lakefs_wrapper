@@ -72,8 +72,8 @@ async def get_user(user_id: str = Path(..., alias='userId')) -> Union[User, Erro
     tags=['auth'],
 )
 async def delete_user(user_id: str = Path(..., alias='userId')) -> Union[None, Error]:
-    return await users_service.delete_user(user_id)
-
+    # return await users_service.delete_user(user_id)
+    raise NotImplementedError
 
 @app.get(
     '/auth/users/{userId}/credentials',
@@ -134,8 +134,8 @@ async def delete_credentials(
     user_id: str = Path(..., alias='userId'),
     access_key_id: str = Path(..., alias='accessKeyId'),
 ) -> Union[None, Error]:
-    return await users_service.delete_credentials(user_id=user_id, access_key_id=access_key_id)
-
+    # return await users_service.delete_credentials(user_id=user_id, access_key_id=access_key_id)
+    raise NotImplementedError
 
 @app.get(
     '/auth/users/{userId}/credentials/{accessKeyId}',
@@ -198,13 +198,14 @@ async def list_user_policies(
     effective: Optional[bool] = False,
     user_id: str = Path(..., alias='userId'),
 ) -> Union[PolicyList, Error]:
-    return await users_service.list_user_policies(
-        user_id=user_id,
-        prefix=prefix,
-        after=after,
-        amount=amount,
-        effective=effective,
-    )
+    # return await users_service.list_user_policies(
+    #     user_id=user_id,
+    #     prefix=prefix,
+    #     after=after,
+    #     amount=amount,
+    #     effective=effective,
+    # )
+    raise NotImplementedError
 
 
 @app.put(
@@ -222,8 +223,8 @@ async def attach_policy_to_user(
     user_id: str = Path(..., alias='userId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
-    return await users_service.attach_policy_to_user(user_id=user_id, policy_id=policy_id)
-
+    # return await users_service.attach_policy_to_user(user_id=user_id, policy_id=policy_id)
+    raise NotImplementedError
 
 @app.delete(
     '/auth/users/{userId}/policies/{policyId}',
@@ -240,4 +241,5 @@ async def detach_policy_from_user(
     user_id: str = Path(..., alias='userId'),
     policy_id: str = Path(..., alias='policyId'),
 ) -> Union[None, Error]:
-    return await users_service.detach_policy_from_user(user_id=user_id, policy_id=policy_id)
+    # return await users_service.detach_policy_from_user(user_id=user_id, policy_id=policy_id)
+    raise NotImplementedError

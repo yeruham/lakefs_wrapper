@@ -23,7 +23,7 @@ async def list_branches(
     repository: str = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[RefList, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.branches_api.list_branches(repository=repository, prefix=prefix, after=after, amount=amount, show_hidden=show_hidden)
 
 
@@ -47,7 +47,7 @@ async def create_branch(
     body: BranchCreation = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, str, Error]:
-    await require_permission(current_user.username, LakeFSAction.write, repository)
+    # await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.branches_api.create_branch(repository, body)
 
 
@@ -67,7 +67,7 @@ async def get_branch(
     branch: str = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[Ref, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.branches_api.get_branch(repository=repository, branch=branch)
 
 
@@ -89,7 +89,7 @@ async def delete_branch(
     branch: str = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Error]:
-    await require_permission(current_user.username, LakeFSAction.delete, repository)
+    # await require_permission(current_user.username, LakeFSAction.delete, repository)
     return _client.branches_api.delete_branch(repository=repository, branch=branch, force=force)
 
 
@@ -111,7 +111,7 @@ async def reset_branch(
     body: ResetCreation = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Error]:
-    await require_permission(current_user.username, LakeFSAction.write, repository)
+    # await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.branches_api.reset_branch(repository=repository, branch=branch, reset_creation=body)
 
 
@@ -134,7 +134,7 @@ async def revert_branch(
     body: RevertCreation = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Error]:
-    await require_permission(current_user.username, LakeFSAction.write, repository)
+    # await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.branches_api.revert_branch(repository=repository, branch=branch, revert_creation=body)
 
 
@@ -158,5 +158,5 @@ async def diff_branch(
     branch: str = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[DiffList, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.branches_api.diff_branch(repository=repository, branch=branch, prefix=prefix, amount=amount, after=after, delimiter=delimiter)

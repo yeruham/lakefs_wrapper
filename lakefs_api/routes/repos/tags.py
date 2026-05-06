@@ -22,7 +22,7 @@ async def list_tags(
     repository: str = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[RefList, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.tags_api.list_tags(repository=repository, prefix=prefix, after=after, amount=amount)
 
 
@@ -46,7 +46,7 @@ async def create_tag(
     body: TagCreation = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Ref, Error]:
-    await require_permission(current_user.username, LakeFSAction.write, repository)
+    # await require_permission(current_user.username, LakeFSAction.write, repository)
     return _client.tags_api.create_tag(repository=repository, tag_creation=body)
 
 
@@ -66,7 +66,7 @@ async def get_tag(
     tag: str = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[Ref, Error]:
-    await require_permission(current_user.username, LakeFSAction.read, repository)
+    # await require_permission(current_user.username, LakeFSAction.read, repository)
     return _client.tags_api.get_tag(repository=repository, tag=tag)
 
 
@@ -88,5 +88,5 @@ async def delete_tag(
     tag: str = ...,
     current_user: BasicUser = Depends(core_get_current_user),
 ) -> Union[None, Error]:
-    await require_permission(current_user.username, LakeFSAction.delete, repository)
+    # await require_permission(current_user.username, LakeFSAction.delete, repository)
     return _client.tags_api.delete_tag(repository=repository, tag=tag, force=force)
