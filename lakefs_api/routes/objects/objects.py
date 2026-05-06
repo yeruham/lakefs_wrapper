@@ -1,4 +1,6 @@
 from .._shared import *
+from fastapi.responses import Response
+
 from lakefs_api.core.lakefs_client import _client
 
 app = APIRouter()
@@ -80,7 +82,8 @@ def stat_object(
     },
     tags=['objects'],
 )
-def upload_object(
+async def upload_object(
+    request: Request,
     if__none__match: Optional[str] = Header(None, alias='If-None-Match'),
     if__match: Optional[str] = Header(None, alias='If-Match'),
     storage_class: Optional[str] = Query(None, alias='storageClass'),
@@ -88,9 +91,22 @@ def upload_object(
     repository: str = ...,
     branch: str = ...,
     path: str = ...,
-    file: bytes = b'',
+    # content: UploadFile = File(...),
 ) -> Union[None, ObjectStats, Error]:
-    return _client.objects_api.upload_object(repository=repository, branch=branch, path=path, force=force, storage_class=storage_class, if_none_match=if__none__match, if_match=if__match, content=file)
+    # body = await request.body()
+    # print(f"raw body: {body}")
+    # print(f"headers: {dict(request.headers)}")
+    # file_bytes = content.file.read()
+    content_type = request.headers.get("content-type", "")
+
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+        file_bytes = await form["content"].read()
+    else:
+        file_bytes = await request.body()
+    object_stats = _client.objects_api.upload_object(repository=repository, branch=branch, path=path, force=force, storage_class=storage_class, if_none_match=if__none__match, if_match=if__match, content=file_bytes)
+    if object_stats:
+         return ObjectStats.model_validate(object_stats.dict())
 
 
 @app.delete(
@@ -169,6 +185,7 @@ def delete_objects(
 @app.get(
     '/repositories/{repository}/refs/{ref}/objects',
     response_model=bytes,
+    status_code=206,
     responses={
         '206': {'model': bytes},
         '400': {'model': Error},
@@ -189,5 +206,10 @@ def get_object(
     repository: str = ...,
     ref: str = ...,
     path: str = ...,
-) -> Union[bytes, Error]:
-    return _client.objects_api.get_object(repository=repository, ref=ref, path=path, presign=presign, range=range, if_none_match=if__none__match)
+) -> Union[Response, Error]:
+    byte_object = _client.objects_api.get_object(repository=repository, ref=ref, path=path, presign=presign, range=range, if_none_match=if__none__match)
+    return Response(
+        content=bytes(byte_object),
+        status_code=206,
+        media_type="application/octet-stream",
+    )
