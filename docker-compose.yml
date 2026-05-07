@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL (lakeFS internal metadata) ─────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: datasets-hub-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lakefs}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lakefs_password}
+      POSTGRES_DB: ${POSTGRES_DB:-lakefs_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - lakefs-net
+    restart: unless-stopped
+
+  # ── MinIO (S3-compatible object storage) ──────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: datasets-hub-minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-password123}
+    volumes:
+      - minio_data:/data
+    networks:
+      - lakefs-net
+    restart: unless-stopped
+
+  # ── lakeFS (Data versioning engine) ───────────────────────
+  lakefs:
+    image: treeverse/lakefs:latest
+    container_name: datasets-hub-lakefs
+    ports:
+      - "8001:8000"   # lakeFS UI & API (mapped to 8001 to avoid conflict with app)
+    environment:
+      LAKEFS_DATABASE_TYPE: postgres
+      LAKEFS_DATABASE_POSTGRES_CONNECTION_STRING: postgresql://${POSTGRES_USER:-lakefs}:${POSTGRES_PASSWORD:-lakefs_password}@postgres/${POSTGRES_DB:-lakefs_db}?sslmode=disable
+      LAKEFS_BLOCKSTORE_TYPE: s3
+      LAKEFS_BLOCKSTORE_S3_FORCE_PATH_STYLE: "true"
+      LAKEFS_BLOCKSTORE_S3_ENDPOINT: http://minio:9000
+      LAKEFS_BLOCKSTORE_S3_CREDENTIALS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY:-admin}
+      LAKEFS_BLOCKSTORE_S3_CREDENTIALS_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY:-password123}
+      LAKEFS_AUTH_ENCRYPT_SECRET_KEY: "some-random-secret-for-lakefs-auth"
+      LAKEFS_INSTALLATION_ACCESS_KEY_ID: ${LAKEFS_ACCESS_KEY}
+      LAKEFS_INSTALLATION_SECRET_ACCESS_KEY: ${LAKEFS_SECRET_KEY}
+      LAKEFS_BLOCKSTORE_S3_PRE_SIGNED_ENDPOINT: http://localhost:9000
+    depends_on:
+      - postgres
+      - minio
+    networks:
+      - lakefs-net
+    restart: unless-stopped
+
+networks:
+  lakefs-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  minio_data:

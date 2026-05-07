@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from pydantic import BaseModel, RootModel, Field
+from pydantic import BaseModel, RootModel, Field, ConfigDict
 
 from .auth import ExternalPrincipalSettings
 
@@ -10,7 +10,9 @@ from .auth import ExternalPrincipalSettings
 class StorageConfig(BaseModel):
     blockstore_type: str
     blockstore_namespace_example: str
-    blockstore_namespace_ValidityRegex: str
+    blockstore_namespace_validity_regex: str = Field(
+        alias="blockstore_namespace_ValidityRegex"
+    )
     default_namespace_prefix: Optional[str] = None
     pre_sign_support: bool
     pre_sign_support_ui: bool
@@ -19,6 +21,8 @@ class StorageConfig(BaseModel):
     pre_sign_multipart_upload: Optional[bool] = None
     blockstore_id: Optional[str] = None
     blockstore_description: Optional[str] = None
+
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class StorageConfigList(RootModel[List[StorageConfig]]):

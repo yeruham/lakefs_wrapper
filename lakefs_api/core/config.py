@@ -18,46 +18,10 @@ class Settings(BaseSettings):
     mongo_db_name: str = "datasets_db"
 
     # lakeFS
-    lakefs_endpoint: str = "http://localhost:8000"
-    lakefs_access_key: str = "AKIAIOSFOLQUICKSTART"
-    lakefs_secret_key: str = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-
-    # MinIO
-    minio_endpoint: str = "http://minio:9000"
-    minio_access_key: str = "admin"
-    minio_secret_key: str = "password123"
-    minio_bucket: str = "datasets"
+    lakefs_endpoint: str = "http://localhost:8001"
+    lakefs_access_key: str = "AKIAJPCO7MT4PTCZNY5Q"
 
 
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-
-
-#lakefs-server
-DEFAULT_LAKEFS_SERVER_CONFIG = {
-    "capabilities_config": {
-        "async_ops": False
-    },
-    "storage_config": {
-        "blockstore_description": "",
-        "blockstore_id": "",
-        "blockstore_namespace_ValidityRegex": "^local://",
-        "blockstore_namespace_example": "local://example-bucket/",
-        "blockstore_type": "local",
-        "default_namespace_prefix": "local://",
-        "import_support": False,
-        "import_validity_regex": "^local://",
-        "pre_sign_multipart_upload": False,
-        "pre_sign_support": False,
-        "pre_sign_support_ui": False
-    },
-    "storage_config_list": [],
-    "ui_config": {},
-    "version_config": {
-        "latest_version": "1.80.0",
-        "upgrade_recommended": False,
-        "version": "1.80.0",
-        "version_context": "lakeFS"
-    }
-}

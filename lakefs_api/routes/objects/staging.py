@@ -15,15 +15,15 @@ app = APIRouter()
     tags=['staging'],
 )
 def get_physical_address(
-    presign: Optional[bool] = None,
-    repository: str = ...,
-    branch: str = ...,
-    path: str = ...,
+        presign: Optional[bool] = None,
+        repository: str = ...,
+        branch: str = ...,
+        path: str = ...,
 ) -> Union[StagingLocation, Error]:
     """
     generate an address to which the client can upload an object
     """
-    return _client.staging_api.get_physical_address(repository=repository, branch=branch, presign=presign, path=path)
+    return _client.staging_api.get_physical_address(repository=repository, branch=branch, path=path, presign=presign)
 
 
 @app.put(
@@ -52,4 +52,4 @@ def link_physical_address(
     """
     associate staging on this physical address with a path
     """
-    raise NotImplementedError
+    return _client.staging_api.link_physical_address(repository=repository, branch=branch, path=path, staging_metadata=body, if_none_match=if__none__match, if_match=if__match)
