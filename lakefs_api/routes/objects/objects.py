@@ -213,3 +213,20 @@ def get_object(
         status_code=206,
         media_type="application/octet-stream",
     )
+
+
+@app.get(
+    '/repositories/{repository}/refs/{ref}/objects/underlyingProperties',
+    response_model=UnderlyingObjectProperties,
+    responses={
+        '400': {'model': Error},
+        '401': {'model': Error},
+        '404': {'model': Error},
+        'default': {'model': Error},
+    },
+    tags=['objects'],
+)
+def get_underlying_properties(
+    repository: str, ref: str = ..., path: str = ...
+) -> Union[UnderlyingObjectProperties, Error]:
+    return _client.objects_api.get_underlying_properties(repository=repository, ref=ref, path=path)

@@ -61,23 +61,6 @@ async def log_commits(
     return _client.refs_api.log_commits(repository=repository, ref=ref, after=after, amount=amount, objects=objects, prefixes=prefixes, limit=limit, first_parent=first_parent, since=since, stop_at=stop_at)
 
 
-@app.get(
-    '/repositories/{repository}/refs/{ref}/objects/underlyingProperties',
-    response_model=UnderlyingObjectProperties,
-    responses={
-        '400': {'model': Error},
-        '401': {'model': Error},
-        '404': {'model': Error},
-        'default': {'model': Error},
-    },
-    tags=['objects'],
-)
-def get_underlying_properties(
-    repository: str, ref: str = ..., path: str = ...
-) -> Union[UnderlyingObjectProperties, Error]:
-    raise NotImplementedError
-
-
 @app.post(
     '/repositories/{repository}/refs/{sourceRef}/merge/{destinationBranch}',
     response_model=MergeResult,
